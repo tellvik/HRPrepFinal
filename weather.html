@@ -1,23 +1,48 @@
 <!DOCTYPE>
 <html>
-<head>
+ <head>
   <title>HTML Document</title>
-</head>
-<body>
-<h1>Where are you going?</h1>
-<form action="actionPage.js" method="get">
-  City:*<br>
-  <input type="text" name="city" value="" required><br>
-  State (U.S. destinations only):<br>
-  <input type="text" name="state" value=""><br>
-  Country:*<br>
-  <input type="text" name="country" value="" required><br>
-  <input type="submit" value="Submit">
-</form>
-<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-<script></script>
-  
-  
-
-</body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+ </head>
+ <body>
+ <h1>Where are you going?</h1>
+ 
+ <!-- Form to collect user destination -->
+ <form id="floating-panel">
+  Input a location:<br>
+  <input id="address" type="textbox" placeholder="enter a city" autocomplete="off" onkeypress="enterPress(event)">
+  <input id="submit" type="button" value="Geocode">
+ </form>
+ 
+ <!-- Placeholder for current temperature -->
+ <p id="currentTemp"></p>
+ 
+ <!-- Script to capture data from form and submit to Google Maps api.
+      We need to modify it to submit to Wunderground api. -->
+  <script>
+    document.getElementById('submit').addEventListener('click', function() {
+          geocodeAddress(geocoder, map);
+        });
+ 
+ // Weather data variable declarations. Will be assigned in following functions.   
+    var location;
+    var temp_f;
+ 
+ /* Wunderground api call function and object. We need to:
+     1. modify it so url is customizable based on user input and
+     2. add data aside from temperature that we want to return to our page.
+ */
+    jQuery(document).ready(function($) {
+      $.ajax({
+      url : "http://api.wunderground.com/api/e643881199d3aa53/geolookup/conditions/q/IA/Cedar_Rapids.json",
+      dataType : "jsonp",
+      success : function(parsed_json) {
+        location = parsed_json['location']['city'];
+        temp_f = parsed_json['current_observation']['temp_f'];
+        $("#currentTemp").append("Current temperature in " + location + " is: " + temp_f);
+        }
+      });
+    });
+  </script>
+ </body>
 </html>
