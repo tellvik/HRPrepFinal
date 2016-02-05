@@ -61,6 +61,7 @@ h1 {
 </form>  
 
     <p class="weatherrec"></p>
+    <p class="displayWeather"></p>
 
 
 </div>
@@ -71,34 +72,57 @@ h1 {
       var state;
       var latitude;
       var longitude;
-      var temp; 
+      var temp;
       
-      // LAST DAY, NEED TO SWAP IN LAT/LONG VARIABLES & CONVERT KELVIN
-  //     var getTemp = function(){
-  //        $.ajax({
-  // url : "http://api.openweathermap.org/data/2.5/weather?lat=37.776289&lon=-122.395234&appid=44db6a862fba0b067b1930da0d769e98",
-  // dataType : "jsonp",
-  // success : function(parsed_json) {
-  // temp = parsed_json['main']['temp'];
-  //  }
-  // });
-  //     };
-      var wunderground = require('node-wunderground')('e643881199d3aa53');
-      var query = {
-        lat: latitude;
-        lng: longitude;
-      };
-      
-      var getTemp = function() {
-        wunderground.conditions(query, function(err, conditions)) {
-          if(!err) {
-            console.log('curent temp ' + conditions);
-          }
-        }
-      }
+   
+ 
 
 
       function initMap() {
+        
+       getTemp = function(lat, long){
+         $.ajax({
+  // url : "http://api.openweathermap.org/data/2.5/weather?lat=37.776289&lon=-122.395234&appid=44db6a862fba0b067b1930da0d769e98",
+  url : 'http://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + long + '&appid=44db6a862fba0b067b1930da0d769e98',
+  // url : 'http://api.wunderground.com/api/e643881199d3aa53/conditions/q/' + lat + ',' + long + '.json',
+  dataType : "jsonp",
+  success : function(parsed_json) {
+  temp = Math.round(parsed_json['main']['temp'] * 9/5 - 459.67);
+  $('.displayWeather').append('Current temp: ' + temp + '\xb0' + 'F');
+
+   /* This is an attempt to display the current weather icon from openweather api to the page. (it's not working yet)
+  
+  $(".displayWeather").append('<img class="weatherIcon" src="http://openweathermap.org/img/w/' + parsed_json.weather.icon + '.png">');
+  
+  */
+  
+  /* This is code for wunderground api (it works!):
+  
+  temp = parsed_json.current_observation.temp_f;
+  $(".displayWeather").append('<img class="weatherIcon" src="' + parsed_json.current_observation.icon_url + '">');
+  
+  */
+  
+  
+  if (temp > 80){
+            map.mapTypes.set(redMapTypeId, redMapType);
+            map.setMapTypeId(redMapTypeId);
+           $(".weatherrec").text('Sun\'s out! Get those stunner shades.').css('color', 'red');
+
+          } else if (temp < 50){
+            map.mapTypes.set(blueMapTypeId, blueMapType);
+            map.setMapTypeId(blueMapTypeId);
+            $(".weatherrec").text('It\'s cold! Seriously get that jumper.').css('color', 'blue');
+            
+          } else {
+              map.mapTypes.set(mildMapTypeId, mildMapType);
+              map.setMapTypeId(mildMapTypeId);
+              $('.weatherrec').text('It\'s looking good. Stay comfy with layers.').css('color', '#00b33c');
+          }
+   }
+  });
+      };
+      
                 
         var redMapType = new google.maps.StyledMapType([
       {
@@ -128,6 +152,7 @@ h1 {
           {hue: '#001d89'},
           {visibility: 'simplified'},
           {gamma: 0.5},
+          {saturation: -40},
           {weight: 0.5}
         ]
       },
@@ -143,6 +168,33 @@ h1 {
       name: 'Custom Style'
   });
   var blueMapTypeId = 'custom_style';
+  
+  
+  
+  var mildMapType = new google.maps.StyledMapType([
+      {
+        stylers: [
+          {hue: '#00b33c'},
+          {visibility: 'simplified'},
+          {gamma: 0.5},
+          {saturation: -40},
+          {weight: 0.5}
+        ]
+      },
+      {
+        elementType: 'labels',
+        stylers: [{visibility: 'off'}]
+      },
+      {
+        featureType: 'water',
+        stylers: [{color: '#00b33c'}]
+      }
+    ], {
+      name: 'Custom Style'
+  });
+  var mildMapTypeId = 'custom_style';  
+
+  
 
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 2,
@@ -155,17 +207,7 @@ h1 {
 
         document.getElementById('submit').addEventListener('click', function() {
           geocodeAddress(geocoder, map);
-        if (temp > 80){
-            map.mapTypes.set(redMapTypeId, redMapType);
-            map.setMapTypeId(redMapTypeId);
-           $(".weatherrec").text('Dude, sun\'s out. Get those stunner shades.').css('color', 'red');
-
-          }
-          if (temp < 50){
-            map.mapTypes.set(blueMapTypeId, blueMapType);
-            map.setMapTypeId(blueMapTypeId);
-            $(".weatherrec").text('Bro its cold! Seriously get that jumper.').css('color', 'blue');
-          }
+      
            
         });
             
@@ -185,7 +227,8 @@ h1 {
           state = results[0].address_components[2].short_name;
           latitude = results[0].geometry.location.lat();
           longitude = results[0].geometry.location.lng();
-          getTemp();
+          getTemp(latitude, longitude);
+          //wait a bit
           } else {
             alert('Geocode was not successful for the following reason: ' + status);
           }
@@ -218,14 +261,5 @@ h1 {
         async defer></script>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
 
 
