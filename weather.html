@@ -14,53 +14,54 @@
         margin: 0;
         padding: 0;
       }
+      
       #map {
         height: 100%;
-      } 
-#floating-panel {
-  height: 80%;
-  position: absolute;
-  bottom: 0px;
-  left: 15%;
-  width: 450px;
-  z-index: 5;
-  background-color: #fff;
-  padding: 5px;
-  /*border: 1px solid #999;*/
-  text-align: left;
-  font-family: 'Open Sans Condensed', sans-serif;
-  line-height: 30px;
-  padding-left: 10px;
-  box-shadow: 1px 1px 11px 0px rgba(50, 50, 50, 0.86);
-}
+      }
+      
+      #floating-panel {
+        height: 80%;
+        position: absolute;
+        bottom: 0px;
+        left: 15%;
+        width: 450px;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        /*border: 1px solid #999;*/
+        text-align: left;
+        font-family: 'Open Sans Condensed', sans-serif;
+        line-height: 30px;
+        padding-left: 10px;
+        box-shadow: 1px 1px 11px 0px rgba(50, 50, 50, 0.86);
+      }
 
-h1 {
-  color: #333333;
-  font-family: 'Open Sans Condensed', sans-serif;
-  font-weight: bold;
-  margin-bottom: 0px;
-  text-align: center;
-  font-size: 40px;
-}
+      h1 {
+        color: #333333;
+        font-family: 'Open Sans Condensed', sans-serif;
+        font-weight: bold;
+        margin-bottom: 0px;
+        text-align: center;
+        font-size: 40px;
+      }
 
-.weatherrec {
-  font-size: 30px;
-  text-align: center;
-}
+      .weatherrec {
+        font-size: 30px;
+        text-align: center;
+      }
 
-.displayWeather {
-  font-size: 30px;
-  text-align: center;
-}
+      .displayWeather {
+        font-size: 30px;
+        text-align: center;
+      }
 
-.gifinsertion {
-  text-align: center;
-}
+      .gifinsertion {
+        text-align: center;
+      }
 
-.gifinsertion img{
-  width:400px;
-}
-
+      .gifinsertion img{
+        width:400px;
+      }
     </style>
   </head>
   <body>
@@ -97,7 +98,7 @@ h1 {
    
       var allthehotgifs = ['http://i.giphy.com/IvjjgsEhnLCzm.gif', 'http://i.giphy.com/VPa4mZIeyHhpC.gif', 'http://i.giphy.com/FzpNPTpiDpsmk.gif'];
       var allthecoldgifs = ['https://media.giphy.com/media/a78uDEnjP30mQ/giphy.gif', 'http://8840-presscdn-0-18.pagely.netdna-cdn.com/wp-content/uploads/2015/04/S5E1-Stannis-Davos-Wall.gif', 'https://45.media.tumblr.com/ac057a38126548e22d6b5d738ba2ff89/tumblr_mz1xgdDgKK1qdpvumo1_500.gif', 'http://lovelace-media.imgix.net/uploads/273/3193c7d0-ed5c-0132-44ab-0a2ca390b447.gif?'];
-      var allthemildgifs = ['http://i.giphy.com/5xtDarmoFtN3Omucd0c.gif','https://media.giphy.com/media/6yj4FRw3XZt6M/giphy.gif','http://i.giphy.com/TiGoXcBhNPl8A.gif']
+      var allthemildgifs = ['http://i.giphy.com/5xtDarmoFtN3Omucd0c.gif','https://media.giphy.com/media/6yj4FRw3XZt6M/giphy.gif','http://i.giphy.com/TiGoXcBhNPl8A.gif'];
       
       var randomHotgif; 
       var randomcoldgif;
@@ -105,124 +106,114 @@ h1 {
 
       function initMap() {
         
-       getTemp = function(lat, long){
+        getTemp = function(lat, long){
          $.ajax({
-  // url : "http://api.openweathermap.org/data/2.5/weather?lat=37.776289&lon=-122.395234&appid=44db6a862fba0b067b1930da0d769e98",
-  url : 'http://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + long + '&appid=44db6a862fba0b067b1930da0d769e98',
-  dataType : "jsonp",
-  success : function(parsed_json) {
-  temp = Math.round(parsed_json['main']['temp'] * 9/5 - 459.67);
-  weather = parsed_json.weather[0].icon;
-  $('.displayWeather').html('<p>Current temp: ' + temp + '\xb0' + 'F<img class="weatherIcon" src="http://openweathermap.org/img/w/' + weather + '.png"></p>');
-  
-   // This is an attempt to display the current weather icon to the page.
-  
-  // $(".displayWeather").html('<img class="weatherIcon" src="http://openweathermap.org/img/w/' + weather + '.png">');
+          url : 'http://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + long + '&appid=44db6a862fba0b067b1930da0d769e98',
+          dataType : "jsonp",
+          success : function(parsed_json) {
+          temp = Math.round(parsed_json['main']['temp'] * 9/5 - 459.67);
+          weather = parsed_json.weather[0].icon;
+          $('.displayWeather').html('<p>Current temp: ' + temp + '\xb0' + 'F<img class="weatherIcon" src="http://openweathermap.org/img/w/' + weather + '.png"></p>');
   
   
-  
-  if (temp > 80){
-            map.mapTypes.set(redMapTypeId, redMapType);
-            map.setMapTypeId(redMapTypeId);
-            randomHotStatement = HotStatements[Math.floor(Math.random()*HotStatements.length)];
-           $(".weatherrec").text(randomHotStatement).css('color', 'red');
-           // $(".gifinsertion").html("<img src=\"http://cdn0.dailydot.com/uploaded/images/original/2013/7/25/desert.gif\">");
-            randomHotgif = allthehotgifs[Math.floor(Math.random()*allthehotgifs.length)];
-           $(".gifinsertion").html("<img src=\"" + randomHotgif +"\">");
-
-           
+        if (temp > 80){
+          map.mapTypes.set(redMapTypeId, redMapType);
+          map.setMapTypeId(redMapTypeId);
+          randomHotStatement = HotStatements[Math.floor(Math.random()*HotStatements.length)];
+          $(".weatherrec").text(randomHotStatement).css('color', 'red');
+          randomHotgif = allthehotgifs[Math.floor(Math.random()*allthehotgifs.length)];
+          $(".gifinsertion").html("<img src=\"" + randomHotgif +"\">");
+         
           } else if (temp < 50){
             map.mapTypes.set(blueMapTypeId, blueMapType);
             map.setMapTypeId(blueMapTypeId);
             randomColdStatement = coldStatments[Math.floor(Math.random()*coldStatments.length)];
             $(".weatherrec").text(randomColdStatement).css('color', 'blue');
-            // $(".gifinsertion").html("<img src=\"http://lovelace-media.imgix.net/uploads/273/3193c7d0-ed5c-0132-44ab-0a2ca390b447.gif?\">");
              randomcoldgif = allthecoldgifs[Math.floor(Math.random()*allthecoldgifs.length)];
            $(".gifinsertion").html("<img src=\"" + randomcoldgif +"\">");
-            
+          
           } else {
               map.mapTypes.set(mildMapTypeId, mildMapType);
               map.setMapTypeId(mildMapTypeId);
               randomMildStatement = MildStatements[Math.floor(Math.random()*MildStatements.length)];
               $('.weatherrec').text(randomMildStatement).css('color', 'green');
-              // $(".gifinsertion").html("<img src=\"https://a.disquscdn.com/get?url=http%3A%2F%2Fwww.eonline.com%2Feol_images%2FEntire_Site%2F2013812%2Frs_450x254-130912145150-gwynethdancing.gif&key=8UuYC3ZMJhs1R-jYfSJYRQ\">");
-               randommildgif = allthemildgifs[Math.floor(Math.random()*allthemildgifs.length)];
-           $(".gifinsertion").html("<img src=\"" + randommildgif +"\">");
+              randommildgif = allthemildgifs[Math.floor(Math.random()*allthemildgifs.length)];
+              $(".gifinsertion").html("<img src=\"" + randommildgif +"\">");
           }
-   }
-  });
-      };
+        }
+        });
+        };
       
                 
-        var redMapType = new google.maps.StyledMapType([
-      {
-        stylers: [
-          {hue: '#890000'},
-          {visibility: 'on'},
-          {gamma: 0.5},
-          {weight: 0.5}
-        ]
-      },
-      {
-        elementType: 'labels',
-        stylers: [{visibility: 'on'}]
-      },
-      {
-        featureType: 'water',
-        stylers: [{color: '#A3D3F9'}]
-      }
-    ], {
-      name: 'Custom Style'
-  });
-  var redMapTypeId = 'custom_style';
-  
-    var blueMapType = new google.maps.StyledMapType([
-      {
-        stylers: [
-          {hue: '#001d89'},
-          {visibility: 'on'},
-          {gamma: 0.5},
-          {saturation: -40},
-          {weight: 0.5}
-        ]
-      },
-      {
-        elementType: 'labels',
-        stylers: [{visibility: 'on'}]
-      },
-      {
-        featureType: 'water',
-        stylers: [{color: '#A3D3F9'}]
-      }
-    ], {
-      name: 'Custom Style'
-  });
-  var blueMapTypeId = 'custom_style';
+          var redMapType = new google.maps.StyledMapType([
+            {
+              stylers: [
+                {hue: '#890000'},
+                {visibility: 'on'},
+                {gamma: 0.5},
+                {weight: 0.5}
+              ]
+            },
+            {
+              elementType: 'labels',
+              stylers: [{visibility: 'on'}]
+            },
+            {
+              featureType: 'water',
+              stylers: [{color: '#A3D3F9'}]
+            }
+              ], {
+              name: 'Custom Style'
+          });
+          var redMapTypeId = 'custom_style';
   
   
+          var blueMapType = new google.maps.StyledMapType([
+              {
+                stylers: [
+                  {hue: '#001d89'},
+                  {visibility: 'on'},
+                  {gamma: 0.5},
+                  {saturation: -40},
+                  {weight: 0.5}
+                ]
+              },
+              {
+                elementType: 'labels',
+                stylers: [{visibility: 'on'}]
+              },
+              {
+                featureType: 'water',
+                stylers: [{color: '#A3D3F9'}]
+              }
+            ], {
+                name: 'Custom Style'
+          });
+          var blueMapTypeId = 'custom_style';
   
-  var mildMapType = new google.maps.StyledMapType([
-      {
-        stylers: [
-          {hue: '#00b33c'},
-          {visibility: 'on'},
-          {gamma: 0.5},
-          {saturation: -40},
-          {weight: 0.5}
-        ]
-      },
-      {
-        elementType: 'labels',
-        stylers: [{visibility: 'on'}]
-      },
-      {
-        featureType: 'water',
-        stylers: [{color: '#A3D3F9'}]
-      }
-    ], {
-      name: 'Custom Style'
-  });
-  var mildMapTypeId = 'custom_style';  
+  
+        var mildMapType = new google.maps.StyledMapType([
+            {
+              stylers: [
+                {hue: '#00b33c'},
+                {visibility: 'on'},
+                {gamma: 0.5},
+                {saturation: -40},
+                {weight: 0.5}
+              ]
+            },
+            {
+              elementType: 'labels',
+              stylers: [{visibility: 'on'}]
+            },
+            {
+              featureType: 'water',
+              stylers: [{color: '#A3D3F9'}]
+            }
+          ], {
+            name: 'Custom Style'
+        });
+        var mildMapTypeId = 'custom_style';  
 
   
 
@@ -243,41 +234,28 @@ h1 {
           geocodeAddress(geocoder, map);
 
         });
-            
-      }
-
-          
       
       
-      
-      function geocodeAddress(geocoder, resultsMap) {
-        var address = document.getElementById('address').value;
-        geocoder.geocode({'address': address}, function(results, status) {
-          if (status === google.maps.GeocoderStatus.OK) {
-            resultsMap.setCenter(results[0].geometry.location);
-            resultsMap.setZoom(15);
-          city = results[0].address_components[0].short_name;
-          state = results[0].address_components[2].short_name;
-          latitude = results[0].geometry.location.lat();
-          longitude = results[0].geometry.location.lng();
-          getTemp(latitude, longitude);
-          //wait a bit
-          } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-          }
-        });
-      }
-        
+        function geocodeAddress(geocoder, resultsMap) {
+          var address = document.getElementById('address').value;
+          geocoder.geocode({'address': address}, function(results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+              resultsMap.setCenter(results[0].geometry.location);
+              resultsMap.setZoom(15);
+            city = results[0].address_components[0].short_name;
+            state = results[0].address_components[2].short_name;
+            latitude = results[0].geometry.location.lat();
+            longitude = results[0].geometry.location.lng();
+            getTemp(latitude, longitude);
+            //wait a bit
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        }
+      }      
 
-// if (temp < 50) {
-//   $(".weatherrec").text('Bro its cold! Seriously get that jumper.').css('color', 'blue');
-// }
-// if (temp > 80) {
-//   $(".weatherrec").text('Dude, sun\'s out. Get those shades.').css('color', 'red');
-// }
-
-
-
+ 
 // this needs some work. Not functioning. Supposed to allow enter key to submit address.
 
       function enterPress(e) {
@@ -288,7 +266,6 @@ h1 {
       }
 
     </script>
-    
     
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8ow_45a6Evhl4PNCyQuNthA0zGrYCn_Y&signed_in=true&callback=initMap"
         async defer></script>
